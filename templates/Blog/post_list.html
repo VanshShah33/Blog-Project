@@ -1,0 +1,53 @@
+{% extends 'blog/base.html' %}
+{% block title %}All Posts - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="text-center mb-4 fw-bold text-primary"><i class="bi bi-journal-text"></i> All Blog Posts</h2>
+
+  <div class="row">
+    {% for post in posts %}
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100 border-0" style="border-radius: 15px; transition: transform 0.3s; animation: fadeIn 0.7s;">
+          
+          {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover; border-top-left-radius: 15px; border-top-right-radius: 15px; transition: transform 0.4s;">
+          {% else %}
+            <img src="{% static 'images/default_post.jpg' %}" class="card-img-top" style="height: 200px; object-fit: cover; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title fw-bold">{{ post.title|truncatewords:8 }}</h5>
+            <p class="card-text text-muted mb-2">
+              <i class="bi bi-person"></i> {{ post.author.username }} <br>
+              <i class="bi bi-calendar-event"></i> {{ post.created_at|date:"M d, Y" }}
+            </p>
+            <a href="{% url 'post_detail' post.id %}" class="btn btn-outline-primary btn-sm"><i class="bi bi-book"></i> Read More</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-center mt-5">
+        <h5 class="text-muted"><i class="bi bi-emoji-frown"></i> No posts found.</h5>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Custom Hover & Animation -->
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  .card-img-top:hover {
+    transform: scale(1.05);
+  }
+</style>
+{% endblock %}

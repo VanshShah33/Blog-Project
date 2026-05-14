@@ -1,0 +1,137 @@
+{% extends 'blog/base.html' %}
+{% block title %}User Dashboard - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <!-- Header -->
+  <div class="text-center mb-5" style="animation: fadeInDown 0.8s ease;">
+    <h2 class="fw-bold text-primary"><i class="bi bi-speedometer2"></i> Welcome, {{ user.username }}</h2>
+    <p class="text-muted">Manage your blog posts, track engagement, and add new content.</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row mb-4 text-center">
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-sm border-0" style="border-radius: 15px; background: linear-gradient(135deg, #007bff, #003366); color: white;">
+        <div class="card-body">
+          <i class="bi bi-file-earmark-text display-5 mb-2"></i>
+          <h6>Total Posts</h6>
+          <h3>{{ posts.count }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-sm border-0" style="border-radius: 15px; background: linear-gradient(135deg, #ffc107, #ff8800); color: white;">
+        <div class="card-body">
+          <i class="bi bi-hourglass-split display-5 mb-2"></i>
+          <h6>Pending Posts</h6>
+          <h3>{{ pending_posts }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-sm border-0" style="border-radius: 15px; background: linear-gradient(135deg, #28a745, #006400); color: white;">
+        <div class="card-body">
+          <i class="bi bi-check2-circle display-5 mb-2"></i>
+          <h6>Approved Posts</h6>
+          <h3>{{ approved_posts }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-sm border-0" style="border-radius: 15px; background: linear-gradient(135deg, #17a2b8, #004d61); color: white;">
+        <div class="card-body">
+          <i class="bi bi-heart display-5 mb-2"></i>
+          <h6>Total Likes</h6>
+          <h3>{{ total_likes }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add New Post Button -->
+  <div class="text-end mb-3">
+    <a href="{% url 'add_post' %}" class="btn btn-primary px-4 py-2" style="border-radius: 30px;">
+      <i class="bi bi-plus-circle"></i> Add New Post
+    </a>
+  </div>
+
+  <!-- Posts Table -->
+  <div class="card shadow-sm border-0" style="border-radius: 15px; animation: fadeInUp 0.8s;">
+    <div class="card-header bg-primary text-white fw-bold" style="border-radius: 15px 15px 0 0;">
+      <i class="bi bi-journal-text"></i> Your Posts
+    </div>
+    <div class="card-body table-responsive">
+      {% if posts %}
+      <table class="table table-hover align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th><i class="bi bi-heart"></i> Likes</th>
+            <th><i class="bi bi-eye"></i> Views</th>
+            <th><i class="bi bi-chat-dots"></i> Comments</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in posts %}
+          <tr>
+            <td>{{ post.title|truncatewords:8 }}</td>
+            <td>
+              {% if post.is_approved %}
+                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Approved</span>
+              {% else %}
+                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Pending</span>
+              {% endif %}
+            </td>
+            <td>{{ post.likes.count }}</td>
+            <td>{{ post.views }}</td>
+            <td>{{ post.comments.count }}</td>
+            <td>
+              <a href="{% url 'view_post' post.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i> View</a>
+              <a href="{% url 'edit_post' post.id %}" class="btn btn-sm btn-info"><i class="bi bi-pencil-square"></i> Edit</a>
+              <a href="{% url 'delete_post' post.id %}" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="text-center text-muted my-4"><i class="bi bi-emoji-frown"></i> No posts found.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Animations -->
+<style>
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: #e3f2fd;
+    transition: background 0.3s;
+  }
+
+  .btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: white;
+  }
+
+  .btn-info:hover {
+    background-color: #0a58ca;
+  }
+
+  .btn-danger:hover {
+    background-color: #b02a37;
+  }
+</style>
+{% endblock %}

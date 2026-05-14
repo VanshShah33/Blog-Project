@@ -1,0 +1,53 @@
+{% extends 'blog/base.html' %}
+{% block title %}Login - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow-lg border-0 w-100" style="max-width: 450px; border-radius: 15px; animation: fadeIn 0.7s ease-in-out;">
+    
+    <!-- Card Header -->
+    <div class="card-header text-white text-center" style="background: linear-gradient(90deg, #28a745, #005500); border-radius: 15px 15px 0 0;">
+      <h3 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Login</h3>
+      <p class="small mb-0">Access your MyBlog account</p>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body p-4">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold"><i class="bi bi-person-fill"></i> Username</label>
+          <input type="text" name="username" class="form-control" placeholder="Enter your username" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold"><i class="bi bi-lock-fill"></i> Password</label>
+          <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 py-2" style="border-radius: 30px; transition: all 0.3s;">
+          <i class="bi bi-check-circle"></i> Login
+        </button>
+      </form>
+
+      <p class="mt-3 text-center small">
+        Don't have an account? <a href="{% url 'signup' %}" class="text-success fw-semibold">Sign Up</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Animations -->
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .btn-success:hover {
+    background-color: #1e7e34;
+    box-shadow: 0px 4px 12px rgba(40, 167, 69, 0.4);
+    transform: translateY(-2px);
+  }
+</style>
+{% endblock %}

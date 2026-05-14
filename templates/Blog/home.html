@@ -1,0 +1,64 @@
+{% extends 'blog/base.html' %}
+{% block title %}Home - MyBlog{% endblock %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="text-center py-5" style="background: linear-gradient(135deg, #00509e, #003366); color: white; border-radius: 15px; animation: fadeIn 1s ease-in-out;">
+  <div class="container">
+    <h1 class="fw-bold mb-3"><i class="bi bi-journal-richtext"></i> Welcome to MyBlog</h1>
+    <p class="lead mb-4">Discover stories, share ideas, and explore inspiring content from creators like you.</p>
+    {% if not user.is_authenticated %}
+      <a href="{% url 'signup' %}" class="btn btn-warning btn-lg me-2"><i class="bi bi-person-plus"></i> Join Now</a>
+      <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+    {% else %}
+      <a href="{% url 'user_dashboard' %}" class="btn btn-light btn-lg"><i class="bi bi-person-circle"></i> Go to Dashboard</a>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Blog Post Section -->
+<div class="container mt-5">
+  <h2 class="text-center mb-4 fw-bold text-primary"><i class="bi bi-stars"></i> Latest Blog Posts</h2>
+  <div class="row">
+    {% for post in posts %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-lg border-0" style="border-radius: 15px; transition: all 0.4s ease; overflow: hidden;">
+          {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 220px; object-fit: cover; transition: transform 0.5s ease;">
+          {% else %}
+            <img src="{% static 'images/nature.jpg' %}" class="card-img-top" alt="Default Image" style="height: 220px; object-fit: cover;">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title fw-bold text-dark">{{ post.title|truncatewords:8 }}</h5>
+            <p class="card-text text-muted mb-2"><i class="bi bi-person"></i> {{ post.author.username }} | <i class="bi bi-calendar"></i> {{ post.created_at|date:"M d, Y" }}</p>
+            <p class="text-secondary small">{{ post.content|truncatewords:20 }}</p>
+            <a href="{% url 'post_detail' post.id %}" class="btn btn-outline-primary btn-sm mt-2"><i class="bi bi-book"></i> Read More</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-center mt-5">
+        <h4 class="text-muted"><i class="bi bi-emoji-frown"></i> No posts available yet!</h4>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Custom Animations & Hover Effects -->
+<style>
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .card:hover img {
+    transform: scale(1.05);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+{% endblock %}

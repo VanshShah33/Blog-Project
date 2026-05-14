@@ -1,0 +1,73 @@
+{% extends 'blog/base.html' %}
+{% block title %}Edit Profile - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center my-5">
+  <div class="card shadow-lg border-0 w-100" style="max-width: 600px; border-radius: 15px; animation: fadeIn 0.8s ease-in-out;">
+    
+    <div class="card-header text-white text-center" style="background: linear-gradient(90deg, #4b0082, #6f42c1); border-radius: 15px 15px 0 0;">
+      <h3 class="mb-0"><i class="bi bi-pencil-square"></i> Edit Profile</h3>
+    </div>
+
+    <div class="card-body p-4">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="text-center mb-3">
+          {% if profile.profile_image %}
+            <img src="{{ profile.profile_image.url }}" alt="Profile Picture" class="rounded-circle shadow mb-2" width="120" height="120">
+          {% else %}
+            <img src="https://via.placeholder.com/120" alt="Default" class="rounded-circle shadow mb-2">
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Change Profile Image</label>
+          <input type="file" name="profile_image" class="form-control">
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">First Name</label>
+            <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Last Name</label>
+            <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Gender</label>
+          <select name="gender" class="form-select">
+            <option value="">Select</option>
+            <option value="Male" {% if profile.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if profile.gender == 'Female' %}selected{% endif %}>Female</option>
+            <option value="Other" {% if profile.gender == 'Other' %}selected{% endif %}>Other</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Mobile No</label>
+          <input type="text" name="mobile_no" class="form-control" value="{{ profile.mobile_no }}">
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-success px-4 py-2" style="border-radius: 30px;">
+            <i class="bi bi-save"></i> Save Changes
+          </button>
+          <a href="{% url 'profile' %}" class="btn btn-secondary px-4 py-2" style="border-radius: 30px;">
+            <i class="bi bi-arrow-left-circle"></i> Back
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+{% endblock %}

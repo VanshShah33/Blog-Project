@@ -1,0 +1,171 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title %}Admin Dashboard - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <!-- Header Section -->
+  <div class="text-center mb-5" style="animation: fadeInDown 0.8s ease;">
+    <h2 class="fw-bold text-primary"><i class="bi bi-speedometer2"></i> Admin Dashboard</h2>
+    <p class="text-muted">Manage users, review posts, and oversee your blog platform efficiently.</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row mb-5 text-center">
+    <div class="col-md-4 mb-3">
+      <div class="card shadow border-0"
+        style="border-radius: 15px; background: linear-gradient(135deg, #007bff, #003366); color: white; animation: fadeIn 1s;">
+        <div class="card-body">
+          <i class="bi bi-people display-5 mb-2"></i>
+          <h5>Total Users</h5>
+          <h3>{{ users.count }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card shadow border-0"
+        style="border-radius: 15px; background: linear-gradient(135deg, #28a745, #006400); color: white; animation: fadeIn 1.2s;">
+        <div class="card-body">
+          <i class="bi bi-file-earmark-text display-5 mb-2"></i>
+          <h5>Total Posts</h5>
+          <h3>{{ posts.count }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card shadow border-0"
+        style="border-radius: 15px; background: linear-gradient(135deg, #ffc107, #ff8800); color: white; animation: fadeIn 1.4s;">
+        <div class="card-body">
+          <i class="bi bi-hourglass-split display-5 mb-2"></i>
+          <h5>Pending Approvals</h5>
+          <h3>{{ pending_posts }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Users Section -->
+  <div class="card shadow-sm border-0 mb-5" style="border-radius: 15px; animation: fadeInUp 0.8s;">
+    <div class="card-header bg-primary text-white fw-bold" style="border-radius: 15px 15px 0 0;">
+      <i class="bi bi-people"></i> All Registered Users
+    </div>
+    <div class="card-body">
+      {% if users %}
+      <ul class="list-group">
+        {% for u in users %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <i class="bi bi-person-circle text-primary"></i> {{ u.username }}
+            <small class="text-muted">({{ u.email }})</small>
+          </div>
+          {% if u.is_superuser %}
+          <span class="badge bg-warning text-dark">Admin</span>
+          {% else %}
+          <span class="badge bg-secondary">User</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="text-center text-muted mt-3">No users found.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- All Posts Section -->
+  <div class="card shadow-sm border-0" style="border-radius: 15px; animation: fadeInUp 1s;">
+    <div class="card-header bg-success text-white fw-bold" style="border-radius: 15px 15px 0 0;">
+      <i class="bi bi-journal-richtext"></i> All Blog Posts
+    </div>
+    <div class="card-body">
+      {% if posts %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in posts %}
+            <tr>
+              <td><i class="bi bi-file-text"></i> {{ p.title|truncatewords:8 }}</td>
+              <td><i class="bi bi-person"></i> {{ p.author.username }}</td>
+              <td><i class="bi bi-calendar-event"></i> {{ p.created_at|date:"M d, Y" }}</td>
+              <td>
+                {% if p.is_approved %}
+                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Approved</span>
+                {% else %}
+                <span class="badge bg-danger"><i class="bi bi-hourglass-split"></i> Pending</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if not p.is_approved %}
+                <a href="{% url 'approve_post' p.id %}" class="btn btn-sm btn-success">
+                  <i class="bi bi-check2-circle"></i> Approve
+                </a>
+                {% endif %}
+                <a href="{% url 'delete_post' p.id %}" class="btn btn-sm btn-danger">
+                  <i class="bi bi-trash"></i> Delete
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-center text-muted">No posts available.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Custom Animations -->
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .table-hover tbody tr:hover {
+    background-color: #e3f2fd;
+    transition: background 0.3s;
+  }
+</style>
+{% endblock %}

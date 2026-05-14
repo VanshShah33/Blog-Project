@@ -1,0 +1,79 @@
+{% extends 'blog/base.html' %}
+{% block title %}Profile - MyBlog{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center my-5">
+  <div class="card shadow-lg border-0 w-100" style="max-width: 600px; border-radius: 15px; animation: fadeIn 0.8s ease-in-out;">
+
+    <!-- Header -->
+    <div class="card-header text-white text-center" style="background: linear-gradient(90deg, #6f42c1, #4b0082); border-radius: 15px 15px 0 0;">
+      <h3 class="mb-0"><i class="bi bi-person-circle"></i> Your Profile</h3>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body p-4 text-center">
+      {% if profile.profile_image %}
+        <img src="{{ profile.profile_image.url }}" alt="Profile Picture" class="rounded-circle shadow mb-3" width="120" height="120">
+      {% else %}
+        <img src="https://via.placeholder.com/120" alt="Default" class="rounded-circle shadow mb-3">
+      {% endif %}
+
+      <h4 class="fw-bold mb-2">{{ user.first_name }} {{ user.last_name }}</h4>
+      <p class="text-muted">@{{ user.username }}</p>
+      <hr>
+
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Gender:</strong> {{ profile.gender|default:"Not specified" }}</p>
+      <p><strong>Mobile No:</strong> {{ profile.mobile_no|default:"Not provided" }}</p>
+
+      <hr>
+      <!-- Stats Section -->
+      <div class="row text-center mt-4 mb-3">
+        <div class="col-4">
+          <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-body py-3">
+              <i class="bi bi-file-earmark-text text-primary display-6"></i>
+              <h5 class="mt-2">{{ total_posts }}</h5>
+              <p class="text-muted mb-0">Posts</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-body py-3">
+              <i class="bi bi-heart-fill text-danger display-6"></i>
+              <h5 class="mt-2">{{ total_likes }}</h5>
+              <p class="text-muted mb-0">Likes</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-body py-3">
+              <i class="bi bi-chat-dots-fill text-success display-6"></i>
+              <h5 class="mt-2">{{ total_comments }}</h5>
+              <p class="text-muted mb-0">Comments</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <a href="{% url 'edit_profile' %}" class="btn btn-warning px-4 py-2" style="border-radius: 30px;">
+          <i class="bi bi-pencil-square"></i> Edit Profile
+        </a>
+        <a href="{% url 'user_dashboard' %}" class="btn btn-secondary px-4 py-2" style="border-radius: 30px;">
+          <i class="bi bi-arrow-left-circle"></i> Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+{% endblock %}
